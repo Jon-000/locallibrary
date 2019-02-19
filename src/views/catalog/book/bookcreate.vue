@@ -1,6 +1,6 @@
 <template>
 
-  <el-form ref="form" :model="form" label-width="80px">
+  <el-form ref="form" :model="form" label-width="80px" v-loading="isFormLoading">
     <el-form-item label="书名">
       <el-input v-model="form.title"></el-input>
     </el-form-item>
@@ -39,6 +39,7 @@ export default {
   name: 'BookCreate',
   data() {
     return {
+      isFormLoading: false,
       author_list: [],
       genre_list: [],
       form: {
@@ -52,9 +53,10 @@ export default {
   },
   methods: {
     onSubmit() {
-      console.log('submit!');
-      console.log(this)
-      console.log(this.form);
+      // console.log('submit!');
+      // console.log(this)
+      // console.log(this.form);
+      this.isFormLoading = true;
       let bodyFormData = new FormData();
       for (let formName in this.form) {
         console.log(formName)
@@ -65,8 +67,8 @@ export default {
           bodyFormData.set(formName, this.form[formName]);
         }
       }
-      console.log(bodyFormData)
-
+      // console.log(bodyFormData)
+      let that = this
       axios({
         method: 'post',
         url: '/api/book',
@@ -74,8 +76,13 @@ export default {
         config: { headers: {'Content-Type': 'multipart/form-data' }}
       }).then(function(resp) {
         console.log(resp)
+        // console.log(this)
+        that.$router.push(`/catalog/book/${resp.data.book._id}`)
       })
       .catch((err) => console.log(err))
+      .finally(() => {
+        this.isFormLoading = false
+      })
 
     }
   },
@@ -94,8 +101,9 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style lang="scss" scoped>
 
 </style>
+
 
 
