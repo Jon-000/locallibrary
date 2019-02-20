@@ -6,7 +6,7 @@
       <div>genre of this book:{{book.genre}}</div>
     </div> -->
     <book-form 
-      :title="book.title"
+      :title="book ? book.title : ''"
       :author="book.author._id"
       :summary="book.summary"
       :isbn="book.isbn"
@@ -34,6 +34,7 @@ export default {
     }
   },
   mounted() {
+    // 获取要更新的book的详情，并预先天充值表单中
     axios
       .get(`/api/book/${this.$route.params.id}`)
       .then((res) => {

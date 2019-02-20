@@ -85,26 +85,53 @@ export default {
       let that = this
       // 根据更新还是新建，发送请求put或post
       const httpMethod = this.update ? 'put' : 'post'
+      const httpUrl = this.update ? `/api/book/${that.$route.params.id}` : '/api/book'
       axios({
         method: httpMethod,
-        url: '/api/book',
+        url: httpUrl,
         data: bodyFormData,
         config: { headers: {'Content-Type': 'multipart/form-data' }}
       }).then(function(resp) {
         console.log(resp)
         // console.log(this)
-        // 根据更新还是新建，发送提示信息
-        const popMsg = that.update ? '更新成功' : '新建成功'
-        that.$message({
-          message: popMsg,
-          type: 'success'
-        })
-        // 成功后重定向至详情页
-        that.$router.push(`/catalog/book/${resp.data.book._id}`)
+        // 注意：status code 500时，在axios中，不进入这个then中，直接进入catch环节
+        // 返回resp不一定就表示成功了
+        if (resp.status === 200) {
+          // 更新成功
+          // 根据更新还是新建，发送提示信息
+          const popMsg = that.update ? '更新成功' : '新建成功'
+          that.$message({
+            message: popMsg,
+            type: 'success'
+          })
+          // 成功后重定向至详情页
+          that.$router.push(`/catalog/book/${resp.data.book._id}`)
+        } else if (resp.status === 400) {
+          that.$message({
+            message: '输入有误',
+            type: 'warning'
+          })
+        }
       })
-      .catch((err) => console.log(err))
+      .catch((err) => {
+        console.log(err)
+        // 注意，此时出错，但不一定是更新未成功，
+        // 例如，更新成功，但是在push路由那一步出错，则虽然更新成功，但没跳转并且到这一步catch错误
+        // 事实上，程序编写造成的错误，是没必要通知用户的，
+        // 用户只需要知道他操作的有没有错，操作是否成功等。
+        // 因此，如果在上述错误出现是alert用户一个错误，还有可能对用户造成误导。
+        // catch这一步捕获的所有错误，包括500错误，都是面向程序员而非用户的。
+        // 但是用户点了更新，服务器出错回个500,也应该通知一下用户出错了，而不是什么也不做
+          this.$message({
+            message: '服务器出错了，暂时无法更新',
+            type: 'error'
+          })
+        })
       .finally(() => {
+        console.log('finally')
+        console.log(this)
         this.isFormLoading = false
+
       })
 
     }
