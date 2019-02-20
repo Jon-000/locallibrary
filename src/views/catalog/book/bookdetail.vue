@@ -22,6 +22,9 @@
         <el-tag v-for="genre in book.genre"
           :key="genre._id">{{genre.name}}</el-tag>
       </div>
+      <div>
+        <el-button @click="() => this.$router.push(`/catalog/book/${this.$route.params.id}/update`)">编辑</el-button>
+      </div>
     </section>
 
     <section class="book-instance-list">

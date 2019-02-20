@@ -1,42 +1,17 @@
 <template>
-
-  <el-form ref="form" :model="form" label-width="80px" v-loading="isFormLoading">
-    <el-form-item label="书名">
-      <el-input v-model="form.title"></el-input>
-    </el-form-item>
-    <el-form-item label="作者">
-      <el-select v-model="form.author" placeholder="数据库中已收录作者">
-        <el-option
-          v-for="author in author_list"
-          :key="author._id"
-          :label="author.name" :value="author._id"></el-option>
-      </el-select>
-    </el-form-item>
-    <el-form-item label="概要">
-      <el-input type="textarea" v-model="form.summary"></el-input>
-    </el-form-item>
-    <el-form-item label="ISBN">
-      <el-input v-model="form.isbn"></el-input>
-    </el-form-item>
-    <el-form-item label="类别">
-      <el-checkbox-group v-model="form.genre">
-        <el-checkbox
-          v-for="genre in genre_list"
-          :key="genre._id"
-          :label="genre._id">{{genre.name}}</el-checkbox>
-          <!-- 这里是个坑！label的值将会传入v-model，相当与:value，而label要写在标签里，shit! -->
-      </el-checkbox-group>
-    </el-form-item>
-    <el-form-item>
-      <el-button type="primary" @click="onSubmit">立即创建</el-button>
-      <el-button>取消</el-button>
-    </el-form-item>
-  </el-form>
+  <book-form></book-form>
 </template>
 <script>
+import BookForm from './bookform'
 import axios from 'axios';
 export default {
-  name: 'BookCreate',
+  name: 'book-create',
+  components: {
+    BookForm
+  },
+  props: {
+    // title
+  },
   data() {
     return {
       isFormLoading: false,

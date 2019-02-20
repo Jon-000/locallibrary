@@ -26,6 +26,7 @@ import Catalog from './views/catalog/index'
 import Book from './views/catalog/book/index'
 import BookCreate from './views/catalog/book/bookcreate'
 import BookDetail from './views/catalog/book/bookdetail'
+import BookUpdate from './views/catalog/book/bookupdate'
 import Author from './views/catalog/author'
 import Genre from './views/catalog/genre'
 import Bookinstance from './views/catalog/bookinstance'
@@ -42,6 +43,7 @@ const routes = [
     path: '/catalog', component: Catalog, name: 'catalog',
     children: [
       {path: 'book/create', component: BookCreate, name: "bookcreate"},
+      {path: 'book/:id/update', component: BookUpdate},
       {path: 'book/:id', component: BookDetail},
       {
         path: 'book', component: Book, name: "所有图书",
