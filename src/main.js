@@ -12,6 +12,8 @@ Vue.filter('normalizeDate', normalizeDate);
 
 
 import App from './App.vue'
+import store from './store'
+
 
 Vue.config.productionTip = false
 
@@ -31,12 +33,14 @@ import Author from './views/catalog/author'
 import Genre from './views/catalog/genre'
 import Bookinstance from './views/catalog/bookinstance'
 import HelloWorld from './components/HelloWorld'
+import MyLogging from './components/MyLogging'
 // 2. 定义路由
 // 每个路由应该映射一个组件。 其中"component" 可以是
 // 通过 Vue.extend() 创建的组件构造器，
 // 或者，只是一个组件配置对象。
 // 我们晚点再讨论嵌套路由。
 const routes = [
+  { path: '/logging', components: { mylogging: MyLogging } },
   { path: '/foo', component: Foo },
   // { path: '/bar', component: Bar },
   {
@@ -60,7 +64,7 @@ const routes = [
 // 你还可以传别的配置参数, 不过先这么简单着吧。
 const router = new VueRouter({
   mode: 'history',
-  
+
   routes // (缩写) 相当于 routes: routes
 })
 
@@ -69,6 +73,7 @@ const router = new VueRouter({
 // 从而让整个应用都有路由功能
 
 new Vue({
+  store,
   render: h => h(App),
   router
 }).$mount('#app')

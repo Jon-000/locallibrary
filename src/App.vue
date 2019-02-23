@@ -5,8 +5,15 @@
         <el-menu style="" router mode="horizontal">
           <el-menu-item index="/home"><h1>Local Library</h1></el-menu-item>
           <el-menu-item index="/about">About</el-menu-item>
-          <el-button @click="goTo()">login</el-button>
+          <!-- <el-button @click="goTo()">login</el-button> -->
+          <div>
+            {{count}}
+          </div>
           <i class="el-icon-arrow-right" style="color:white;background:red;"></i>
+          <my-login></my-login>
+
+
+
         </el-menu>
       </el-header>
 
@@ -40,58 +47,67 @@
       </el-container>
     </el-container>
 
+
+
   </div>
 </template>
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
+import MyLogin from './components/MyLogin'
 import axios from 'axios';
+import Cookie from 'js-cookie';
+import { mapState } from 'vuex';
 // import Layout from "./views/layout/Layout.vue";
 export default {
   name: 'app',
   components: {
     HelloWorld,
+    MyLogin
   },
   data() {
     return {
-      client_id: process.env.VUE_APP_GITHUB_OAUTH_CLIENT_ID,
-      scope: 'read:user',
-      state: 'foo',
-      getCodeURL: 'https://github.com/login/oauth/authorize',
-
-      code: null,
-      getUserURl: 'https://api.github.com/user',
     }
   },
   created: function () {
-    console.log(this.$route.path)
-    // when code in url
-    if (this.code) {
-      console.log(this.code)
+    // 当app创建时,即本应用任意子路由下加载时,都会创建vue app,此时检查登录状态
+    // 查看cookie中是否有jwt token
+    console.log(document.cookie)
+    console.log(Cookie.get('url_before_oauth'))
+    const jwt_token = Cookie.get('jwt_token') // 无则返回`undefined`
+    if (jwt_token) {
+      // 改变app的登录状态
+      console.log('get')
+      this.$store.commit('login')
+    } else {
+      console.log('is not logged in')
     }
-    else {
-      // if no code in top, get accessToken from cookie
 
-    }
+
   },
   methods: {
     handleOpen(key, keyPath) {
       this.$router.push('/catalog/book')
     },
-    goTo() {
-      // console.log('goo')
-      // console.log(process.env.NODE_ENV)
-      // console.log(process.env.VUE_APP_GITHUB_OAUTH_CLIENT_ID)
-      let client_id = process.env.VUE_APP_GITHUB_OAUTH_CLIENT_ID
-      let client_secret = process.env.VUE_APP_GITHUB_OAUTH_CLIENT_SECRET
-      let redirect_uri = process.env.VUE_APP_GITHUB_OAUTH_REDIRECT_URI
-      let scope = 'read:user'
-      let u = `https://github.com/login/oauth/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&scope=${scope}`
-      console.log(u)
-      localStorage.urlBeforeAuth = this.$route.path
-      window.location.href = u
+  },
+
+    watch: {
+      '$route' (to, from) {
+        // 对路由变化作出响应...
+        console.log('to:')
+        console.log(to)
+        console.log('from:')
+        console.log(from)
+      }
     },
-  }
+    computed: {
+      ...mapState({
+        count: state => state.count,
+        isLoggedIn: state => state.isLoggedIn
+      })
+
+    }
+
 }
 </script>
 
