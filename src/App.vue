@@ -5,6 +5,8 @@
         <el-menu style="" router mode="horizontal">
           <el-menu-item index="/home"><h1>Local Library</h1></el-menu-item>
           <el-menu-item index="/about">About</el-menu-item>
+          <el-button @click="goTo()">login</el-button>
+          <i class="el-icon-arrow-right" style="color:white;background:red;"></i>
         </el-menu>
       </el-header>
 
@@ -43,16 +45,52 @@
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
+import axios from 'axios';
 // import Layout from "./views/layout/Layout.vue";
 export default {
   name: 'app',
   components: {
     HelloWorld,
   },
+  data() {
+    return {
+      client_id: process.env.VUE_APP_GITHUB_OAUTH_CLIENT_ID,
+      scope: 'read:user',
+      state: 'foo',
+      getCodeURL: 'https://github.com/login/oauth/authorize',
+
+      code: null,
+      getUserURl: 'https://api.github.com/user',
+    }
+  },
+  created: function () {
+    console.log(this.$route.path)
+    // when code in url
+    if (this.code) {
+      console.log(this.code)
+    }
+    else {
+      // if no code in top, get accessToken from cookie
+
+    }
+  },
   methods: {
     handleOpen(key, keyPath) {
       this.$router.push('/catalog/book')
-    }
+    },
+    goTo() {
+      // console.log('goo')
+      // console.log(process.env.NODE_ENV)
+      // console.log(process.env.VUE_APP_GITHUB_OAUTH_CLIENT_ID)
+      let client_id = process.env.VUE_APP_GITHUB_OAUTH_CLIENT_ID
+      let client_secret = process.env.VUE_APP_GITHUB_OAUTH_CLIENT_SECRET
+      let redirect_uri = process.env.VUE_APP_GITHUB_OAUTH_REDIRECT_URI
+      let scope = 'read:user'
+      let u = `https://github.com/login/oauth/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&scope=${scope}`
+      console.log(u)
+      localStorage.urlBeforeAuth = this.$route.path
+      window.location.href = u
+    },
   }
 }
 </script>
