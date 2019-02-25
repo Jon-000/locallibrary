@@ -53,7 +53,6 @@ import apiA from '~/service/api';
 
 export default {
   components: {
-    HelloWorld
   },
   name: 'MyBook',
   data: function() {

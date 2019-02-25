@@ -1,18 +1,35 @@
 <template>
-  <div style="border:1px solid red;float:right; ">
-    login compoent
+  <div class="wrapper" >
 
-    <div v-if="isLoggedIn">头像
-      <el-button @click="logout" >登出</el-button>
+    <div class="container">
+      <div v-if="user">
+          <el-popover
+            placement="bottom"
+            :title="user.github_login"
+            width="200"
+            trigger="click"
+            >
+          <div style="">
+            setting
+          </div>
+          <el-button @click="logout" >登出</el-button>
+            <div slot="reference" class="avatar-container"
+              :style="{backgroundImage: 'url(' + user.github_avatar_url + ')'}">
+            </div>
+          </el-popover>
+      </div>
+
+      <div v-else>
+        <el-button @click="goToOauth" :loading="isLoggingIn">使用github登录</el-button>
+      </div>
     </div>
-    <div v-else>
-      <el-button @click="goToOauth" :loading="isLoggingIn">使用github登录</el-button>
-    </div>
 
 
-    <router-link to="/logging">
+
+
+    <!-- <router-link to="/logging">
       <el-button id="myButton" class="foo bar">Go!</el-button>
-    </router-link>
+    </router-link> -->
     <!-- <router-view name="mylogging"></router-view> -->
   </div>
 </template>
@@ -23,10 +40,14 @@ import Cookie from 'js-cookie';
 export default {
   data: function() {
     return {
-      isLoggingIn: false
+      isLoggingIn: false,
+      showSetting: false,
     }
   },
   computed: {
+    avatarImageUrl:function() {
+      // return this.
+    },
     ...mapState({
       isLoggedIn: (state) => state.isLoggedIn,
       user: (state) => state.user,
@@ -55,13 +76,29 @@ export default {
       window.location.href = u
     },
     logout() {
-      this.$store.commit('logout')
+      this.$store.dispatch('logout')
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.wrapper {
+  position: relative;
 
+  .container {
+    position:absolute;
+    top:50%;
+    right:50%;
+    transform:translate(50%, -50%);
+  }
+}
+.avatar-container {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #666;
+  background-size: contain;
+  // border-radius: 50%;
+
+}
 </style>
-4

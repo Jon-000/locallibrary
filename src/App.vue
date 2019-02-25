@@ -6,11 +6,9 @@
           <el-menu-item index="/home"><h1>Local Library</h1></el-menu-item>
           <el-menu-item index="/about">About</el-menu-item>
           <!-- <el-button @click="goTo()">login</el-button> -->
-          <div>
-            {{count}}
-          </div>
           <i class="el-icon-arrow-right" style="color:white;background:red;"></i>
-          <my-login></my-login>
+
+          <my-login style="float:right;height:60px;padding:0 20px;line-height:60px;"></my-login>
 
 
 
@@ -57,6 +55,8 @@ import HelloWorld from './components/HelloWorld.vue'
 import MyLogin from './components/MyLogin'
 
 import Cookie from 'js-cookie';
+const jwtDecode = require('jwt-decode');
+
 import { mapState } from 'vuex';
 // import Layout from "./views/layout/Layout.vue";
 export default {
@@ -75,12 +75,17 @@ export default {
     console.log(document.cookie)
     console.log(Cookie.get('url_before_oauth'))
     const jwt_token = Cookie.get('jwt_token') // 无则返回`undefined`
+    
     if (jwt_token) {
       // 改变app的登录状态
       console.log('get')
-      this.$store.commit('login')
+      const jwt_token_object = jwtDecode(jwt_token)
+      console.log(jwt_token_object)
+      // this.$store.commit('setUserInfoFromJWT')
+      this.$store.dispatch('login', jwt_token_object.sub)
+      // this.$store.commit('login')
     } else {
-      console.log('is not logged in')
+      console.log("it's not logged in")
     }
 
 
