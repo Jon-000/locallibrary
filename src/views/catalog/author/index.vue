@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import apiA from '~/service/api';
 import moment from 'moment';
 moment.locale('zh_cn')
 export default {
@@ -39,8 +39,10 @@ export default {
     }
   },
   mounted: function() {
-    axios
-      .get('/api/author')
+    apiA({
+      method: 'get',
+      url: 'api/author'
+    })
       .then(res => {
         console.log(res.data)
         this.authorList = res.data.author_list

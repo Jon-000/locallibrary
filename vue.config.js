@@ -1,7 +1,18 @@
+
+const path = require('path');
+
+
 // vue.config.js
 module.exports = {
   // options...
   runtimeCompiler: true,
+  configureWebpack: {
+    resolve: {
+      alias: {
+        "~": path.resolve(__dirname, 'src/')
+      }
+    }
+  },
 
   devServer: {
     proxy: {
