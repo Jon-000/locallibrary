@@ -51,7 +51,7 @@ export default {
       localStorage.urlBeforeAuth = this.$route.path
       // Cookie.remove('jwt_token')
       // Cookie.remove('url_before_auth')
-      Cookie.set('url_before_oauth', this.$route)
+      Cookie.set('url_before_oauth', this.$route.path)
       window.location.href = u
     },
     logout() {
