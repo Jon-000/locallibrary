@@ -50,7 +50,8 @@
   </div>
 </template>
 <script>
-import axios from 'axios';
+import apiA from '~/service/api';
+
 export default {
   name: 'book-detail',
   data() {
@@ -62,7 +63,7 @@ export default {
     }
   },
   mounted() {
-    axios
+    apiA
       .get(`/api/book/${this.$route.params.id}`)
       .then((res) => {
         console.log(res);

@@ -38,7 +38,8 @@
   </el-form>
 </template>
 <script>
-import axios from 'axios';
+import apiA from '~/service/api';
+
 export default {
   name: 'book-create',
   props: [
@@ -86,7 +87,7 @@ export default {
       // 根据更新还是新建，发送请求put或post
       const httpMethod = this.update ? 'put' : 'post'
       const httpUrl = this.update ? `/api/book/${that.$route.params.id}` : '/api/book'
-      axios({
+      apiA  ({
         method: httpMethod,
         url: httpUrl,
         data: bodyFormData,
@@ -137,13 +138,13 @@ export default {
     }
   },
   mounted() {
-    axios
+    apiA
       .get('/api/author')
       .then(res => {
         console.log(res.data.author_list)
         this.author_list = res.data.author_list   
       })
-    axios
+    apiA
       .get('/api/genre')
       .then(res => {
         this.genre_list = res.data.genre_list;

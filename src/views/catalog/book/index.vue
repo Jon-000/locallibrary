@@ -49,8 +49,8 @@
 </template>
 
 <script>
-import HelloWorld from '../../../components/HelloWorld'
-import axios from "axios";
+import apiA from '~/service/api';
+
 export default {
   components: {
     HelloWorld
@@ -76,7 +76,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-          axios
+          apiA
             .delete(`/api/book/${_id}`)
             .then(res => {
               // throw new Error('test err')
@@ -103,7 +103,7 @@ export default {
     }
   },
   mounted() {
-    axios
+    apiA
       .get('/api/book')
       .then(res => {
         console.log(res)

@@ -55,7 +55,7 @@
 <script>
 import HelloWorld from './components/HelloWorld.vue'
 import MyLogin from './components/MyLogin'
-import axios from 'axios';
+
 import Cookie from 'js-cookie';
 import { mapState } from 'vuex';
 // import Layout from "./views/layout/Layout.vue";

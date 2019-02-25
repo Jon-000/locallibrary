@@ -18,7 +18,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 import BookForm from './bookform'
 export default {
   components: {
@@ -35,7 +34,7 @@ export default {
   },
   mounted() {
     // 获取要更新的book的详情，并预先天充值表单中
-    axios
+    apiA
       .get(`/api/book/${this.$route.params.id}`)
       .then((res) => {
         console.log(res);

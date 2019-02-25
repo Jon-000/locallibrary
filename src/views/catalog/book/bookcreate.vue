@@ -2,8 +2,9 @@
   <book-form></book-form>
 </template>
 <script>
-import BookForm from './bookform'
-import axios from 'axios';
+import BookForm from './bookform';
+import apiA from '~/service/api';
+
 export default {
   name: 'book-create',
   components: {
@@ -44,7 +45,7 @@ export default {
       }
       // console.log(bodyFormData)
       let that = this
-      axios({
+      apiA({
         method: 'post',
         url: '/api/book',
         data: bodyFormData,
@@ -62,13 +63,13 @@ export default {
     }
   },
   mounted() {
-    axios
+    apiA
       .get('/api/author')
       .then(res => {
         console.log(res.data.author_list)
         this.author_list = res.data.author_list   
       })
-    axios
+    apiA
       .get('/api/genre')
       .then(res => {
         this.genre_list = res.data.genre_list;
