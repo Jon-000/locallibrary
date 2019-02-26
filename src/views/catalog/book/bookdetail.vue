@@ -1,66 +1,78 @@
 <template>
   <div v-if="loadingErr">不好意思，出错了</div>
+  <div v-else>
+    <div v-if="book" v-loading="!book" class="container"
+      style="text-align:center;"
+      >
+      <section class="book">
+        <el-row :span="24" >
+          <h1>{{book.title}}</h1>
+        </el-row>
+        <el-row :span="24" >
+          <div>Author: {{book.author.name}}</div>
+        </el-row>
+        <div style="text-align:left;">
+          <el-row>
+            <p><strong class="strong">Summary:</strong> {{book.summary}}</p>
+          </el-row>
+          <el-row>
+            <div>ISBN: {{book.isbn}}</div>
+          </el-row>
 
-  <div v-else v-loading="loading"  class="container"
-    style="text-align:center;"
-    >
-    <section class="book">
-      <el-row :span="24" >
-        <h1>{{book.title}}</h1>
-      </el-row>
-      <el-row :span="24" >
-        <div>Author: {{book.author.name}}</div>
-      </el-row>
-      <el-row>
-        <p><strong class="strong">Summary:</strong> {{book.summary  | capitalize}}</p>
-      </el-row>
-      <el-row>
-        <div>ISBN: {{book.isbn}}</div>
-      </el-row>
-
-      <div>Genre:
-        <el-tag v-for="genre in book.genre"
-          :key="genre._id">{{genre.name}}</el-tag>
-      </div>
-      <div>
-        <el-button @click="() => this.$router.push(`/catalog/book/${this.$route.params.id}/update`)">编辑</el-button>
-      </div>
-    </section>
-
-    <section class="book-instance-list">
-      <div class="card" v-for="bookinstance in bookinstance_list" :key="bookinstance._id">
-        <div class="card-left">
-          <div class="cover">book cover picture url</div>
+          <div style="margin-bottom:1rem;">Genre:
+            <el-tag v-for="genre in book.genre" style="margin: 0 10px;"
+              :key="genre._id">{{genre.name}}</el-tag>
+          </div>
+          <div v-if="user">
+            <el-button @click="() => this.$router.push(`/catalog/book/${this.$route.params.id}/update`)">编辑</el-button>
+          </div>
         </div>
-        <div class="card-right">
-          <div v-if="bookinstance.status == 'Available'" class="status available">{{bookinstance.status}}</div>
-          <div v-else-if="bookinstance.status == 'Maintenance'" class="status maintenance">{{bookinstance.status}}</div>
-          <div v-else-if="bookinstance.status == 'Loaned'" class="status loaned">{{bookinstance.status}}</div>
-          <div v-else-if="bookinstance.status == 'Reserved'" class="status reserved">{{bookinstance.status}}</div>
-          
-          <div class="due-back">
-            应还日期：
-            {{ bookinstance.due_back | normalizeDate }}</div>
-          <div class="imprint">
-            出版信息：
-            {{bookinstance.imprint}}</div>
+      </section>
+
+      <section class="book-instance-list">
+        <div class="card" v-for="bookinstance in bookinstance_list" :key="bookinstance._id">
+          <div class="card-left">
+            <div class="cover">book cover picture url</div>
+          </div>
+          <div class="card-right">
+            <div v-if="bookinstance.status == 'Available'" class="status available">{{bookinstance.status}}</div>
+            <div v-else-if="bookinstance.status == 'Maintenance'" class="status maintenance">{{bookinstance.status}}</div>
+            <div v-else-if="bookinstance.status == 'Loaned'" class="status loaned">{{bookinstance.status}}</div>
+            <div v-else-if="bookinstance.status == 'Reserved'" class="status reserved">{{bookinstance.status}}</div>
+            
+            <div class="due-back">
+              应还日期：
+              {{ bookinstance.due_back | normalizeDate }}</div>
+            <div class="imprint">
+              出版信息：
+              {{bookinstance.imprint}}</div>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
   </div>
+
 </template>
 <script>
 import apiA from '~/service/api';
+import { mapState } from 'vuex';
+
 
 export default {
   name: 'book-detail',
   data() {
     return {
+      t: true,
       loading: true,
       loadingErr: false,
       book: null,
       bookinstance_list: []
     }
+  },
+  computed: {
+    ...mapState({
+      user: state => state.user
+    })
   },
   mounted() {
     apiA
