@@ -10,6 +10,7 @@ Vue.use(ElementUI);
 import { normalizeDate } from './common/filters';
 Vue.filter('normalizeDate', normalizeDate);
 
+import Cookie from 'js-cookie';
 
 import App from './App.vue'
 import store from './store'
@@ -46,7 +47,22 @@ const routes = [
   {
     path: '/catalog', component: Catalog, name: 'catalog',
     children: [
-      {path: 'book/create', component: BookCreate, name: "bookcreate"},
+      {path: 'book/create', component: BookCreate, name: "bookcreate",
+        beforeEnter: (to, from, next) => {
+          // 疑问: 这里和store哪个先?貌似这里可以导入store直接用,但是早于store异步获取user信息并更新
+          // 可以先不用store判断登录状态,可以用cookie中是否有jwt_token来判断,但上边的疑问没解决
+          console.log(`before enter ${to.path}`)
+          console.log(to)
+          if(to.path === '/catalog/book/create') {
+            // console.log(store.user) // => undefined, 疑问?为什么不是null,我设置的初始值是null
+            if (Cookie.get('jwt_token')) {
+              next()
+            } else {
+              next('/')
+            }
+          }
+        }
+      },
       {path: 'book/:id/update', component: BookUpdate},
       {path: 'book/:id', component: BookDetail},
       {
@@ -68,6 +84,18 @@ const router = new VueRouter({
   routes // (缩写) 相当于 routes: routes
 })
 
+router.beforeEach((to, from, next) => {
+  console.log(`before each ${to.path}`)
+  console.log(to)
+  if(isProtectedRoute(to.path)) {
+    if (Cookie.get('jwt_token')) {
+      next()
+    } else {
+      next('/')
+    }
+  }
+})
+
 // 4. 创建和挂载根实例。
 // 记得要通过 router 配置参数注入路由，
 // 从而让整个应用都有路由功能
@@ -77,3 +105,16 @@ new Vue({
   render: h => h(App),
   router
 }).$mount('#app')
+
+
+
+// ------helper--------
+
+function isProtectedRoute(path) {
+  switch (path) {
+    case '/catalog/book/create':
+      return true;
+    default:
+      return false;
+  }
+}
