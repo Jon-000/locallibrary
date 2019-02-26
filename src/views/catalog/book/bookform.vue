@@ -113,7 +113,15 @@ export default {
         // console.log(this)
         // 注意：status code 500时，在axios中，不进入这个then中，直接进入catch环节
         // 返回resp不一定就表示成功了
-        if (resp.status === 200) {
+        if (resp.data.msg == "validation failed") {
+          resp.data.errors.forEach(ee => {
+            that.$message({message:ee.msg, type: 'error'})
+          });
+        } else if (resp.data.msg == "save failed") {
+          Object.keys(resp.data.err.errors).forEach(errK => {
+            that.$message({message: resp.data.err.errors[errK].message, type: 'error'})
+          });
+        } else {
           // 更新成功
           // 根据更新还是新建，发送提示信息
           const popMsg = that.update ? '更新成功' : '新建成功'
@@ -123,15 +131,11 @@ export default {
           })
           // 成功后重定向至详情页
           that.$router.push(`/catalog/book/${resp.data.book._id}`)
-        } else if (resp.status === 400) {
-          that.$message({
-            message: '输入有误',
-            type: 'warning'
-          })
+
         }
       })
-      .catch((err) => {
-        console.log(err)
+      .catch((error) => {
+        console.log(error)
         // 注意，此时出错，但不一定是更新未成功，
         // 例如，更新成功，但是在push路由那一步出错，则虽然更新成功，但没跳转并且到这一步catch错误
         // 事实上，程序编写造成的错误，是没必要通知用户的，
@@ -139,10 +143,43 @@ export default {
         // 因此，如果在上述错误出现是alert用户一个错误，还有可能对用户造成误导。
         // catch这一步捕获的所有错误，包括500错误，都是面向程序员而非用户的。
         // 但是用户点了更新，服务器出错回个500,也应该通知一下用户出错了，而不是什么也不做
-          this.$message({
-            message: '服务器出错了，暂时无法更新',
-            type: 'error'
-          })
+
+            if (error.response) {
+              // The request was made and the server responded with a status code
+              // that falls out of the range of 2xx
+              console.log(error.response.data);
+              console.log(error.response.status);
+              console.log(error.response.headers);
+              if (error.response.status === 400) {
+                that.$message({
+                  message: '输入有误',
+                  type: 'warning'
+                })
+              }
+              this.$message({
+                message: '无法创建/更新',
+                type: 'error'
+              })
+            } else if (error.request) {
+              // The request was made but no response was received
+              // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+              // http.ClientRequest in node.js
+              console.log(error.request);
+              this.$message({
+                message: '未收到响应',
+                type: 'error'
+              })
+            } else {
+              // Something happened in setting up the request that triggered an Error
+              console.log('Error', error.message);
+              this.$message({
+                message: '发起请求失败',
+                type: 'error'
+              })
+            }
+            console.log(error.config);
+
+
         })
       .finally(() => {
         console.log('finally')
