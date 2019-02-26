@@ -19,13 +19,6 @@ export default {
     })
   },
   created: function() {
-    console.log('Logging component created')
-    console.log(
-      document.cookie
-    )
-    console.log(this.isLoggingIn)
-    console.log(this.isLoggedIn)
-    console.log(this.user)
   },
   mounted() {
   },

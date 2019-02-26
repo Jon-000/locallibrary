@@ -6,9 +6,10 @@
           <el-menu-item index="/home"><h1>Local Library</h1></el-menu-item>
           <el-menu-item index="/about">About</el-menu-item>
           <!-- <el-button @click="goTo()">login</el-button> -->
-          <i class="el-icon-arrow-right" style="color:white;background:red;"></i>
 
-          <my-login style="float:right;height:60px;padding:0 20px;line-height:60px;"></my-login>
+          <!-- <i class="el-icon-arrow-right" style="color:white;background:red;"></i> -->
+
+          <my-login style="float:right;height:60px;padding:0 20px;line-height:60px;width:100px;"></my-login>
 
 
 
@@ -78,20 +79,20 @@ export default {
   created: function () {
     // 当app创建时,即本应用任意子路由下加载时,都会创建vue app,此时检查登录状态
     // 查看cookie中是否有jwt token
-    console.log(document.cookie)
-    console.log(Cookie.get('url_before_oauth'))
+    // console.log(document.cookie)
+    // console.log(Cookie.get('url_before_oauth'))
     const jwt_token = Cookie.get('jwt_token') // 无则返回`undefined`
     
     if (jwt_token) {
       // 改变app的登录状态
-      console.log('get')
+      // console.log('get')
       const jwt_token_object = jwtDecode(jwt_token)
-      console.log(jwt_token_object)
+      // console.log(jwt_token_object)
       // this.$store.commit('setUserInfoFromJWT')
       this.$store.dispatch('login', jwt_token_object.sub)
       // this.$store.commit('login')
     } else {
-      console.log("it's not logged in")
+      // console.log("it's not logged in")
     }
 
 
@@ -102,15 +103,15 @@ export default {
     },
   },
 
-    watch: {
-      '$route' (to, from) {
-        // 对路由变化作出响应...
-        console.log('to:')
-        console.log(to)
-        console.log('from:')
-        console.log(from)
-      }
-    },
+    // watch: {
+    //   '$route' (to, from) {
+    //     // 对路由变化作出响应...
+    //     console.log('to:')
+    //     console.log(to)
+    //     console.log('from:')
+    //     console.log(from)
+    //   }
+    // },
 
 
 }

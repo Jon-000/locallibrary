@@ -44,7 +44,7 @@ export default {
       url: 'api/author'
     })
       .then(res => {
-        console.log(res.data)
+        // console.log(res.data)
         this.authorList = res.data.author_list
       })
       .catch(err => console.log(err))

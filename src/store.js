@@ -29,7 +29,7 @@ const store = new Vuex.Store({
       const jwt_token = Cookie.get('jwt_token');
       const jwt_info = jwtDecode(jwt_token);
       state.user = jwt_info;
-      console.log(state.user)
+      // console.log(state.user)
     },
     setUserInfo(state, user_detail) {
       // console.log(user_detail)

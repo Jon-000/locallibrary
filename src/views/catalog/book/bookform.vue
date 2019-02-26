@@ -39,17 +39,27 @@
 </template>
 <script>
 import apiA from '~/service/api';
+import Cookie from 'js-cookie';
+
 
 export default {
   name: 'book-create',
-  props: [
-    'title',
-    'author',
-    'summary',
-    'isbn',
-    'genre',
-    'update'
-  ],
+  props: {
+    // 为什么这里设置默认呢值呢?
+    // 因为如果不设置的话,构造出来的formdata将会iu是title:undefined,
+    // 然后在服务端JSON.stringify的时候就换变成title:'undefinded',成字符串啦!!!
+    // 另外从组件构造的角度来说,不强制要求调用时输入props的话,最好还是在组建内部设置上默认值的好.个人观点.
+    title: {default: ''},
+    author: {default: ''},
+    summary: {default: ''},
+    isbn: {default: ''},
+    genre: {
+      default: function() {
+        return []
+      }
+    },
+    update: {default: false}
+  },
   data() {
     return {
       isFormLoading: false,
@@ -83,16 +93,22 @@ export default {
         }
       }
       // console.log(bodyFormData)
+      // console.log(Cookie.get('jwt_token'))
       let that = this
       // 根据更新还是新建，发送请求put或post
       const httpMethod = this.update ? 'put' : 'post'
       const httpUrl = this.update ? `/api/book/${that.$route.params.id}` : '/api/book'
-      apiA  ({
+      apiA.request({
         method: httpMethod,
         url: httpUrl,
         data: bodyFormData,
-        config: { headers: {'Content-Type': 'multipart/form-data' }}
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': 'Bearer ' + Cookie.get('jwt_token'),
+          },
+        // withCredentials: true
       }).then(function(resp) {
+        console.log('resp:')
         console.log(resp)
         // console.log(this)
         // 注意：status code 500时，在axios中，不进入这个then中，直接进入catch环节

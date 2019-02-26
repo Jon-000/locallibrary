@@ -2,6 +2,8 @@
   <book-form></book-form>
 </template>
 <script>
+import Cookie from 'js-cookie';
+
 import BookForm from './bookform';
 import apiA from '~/service/api';
 
@@ -29,37 +31,6 @@ export default {
   },
   methods: {
     onSubmit() {
-      // console.log('submit!');
-      // console.log(this)
-      // console.log(this.form);
-      this.isFormLoading = true;
-      let bodyFormData = new FormData();
-      for (let formName in this.form) {
-        console.log(formName)
-        console.log(this.form[formName])
-        if (this.form[formName] instanceof Array) {
-          bodyFormData.set(formName, JSON.stringify(this.form[formName]))
-        } else {
-          bodyFormData.set(formName, this.form[formName]);
-        }
-      }
-      // console.log(bodyFormData)
-      let that = this
-      apiA({
-        method: 'post',
-        url: '/api/book',
-        data: bodyFormData,
-        config: { headers: {'Content-Type': 'multipart/form-data' }}
-      }).then(function(resp) {
-        console.log(resp)
-        // console.log(this)
-        that.$router.push(`/catalog/book/${resp.data.book._id}`)
-      })
-      .catch((err) => console.log(err))
-      .finally(() => {
-        this.isFormLoading = false
-      })
-
     }
   },
   mounted() {

@@ -32,7 +32,7 @@
           >
         </el-table-column>
 
-        <el-table-column label="操作">
+        <el-table-column v-if="user" label="操作">
           <template slot-scope="scope">
             <el-button
               size="mini"
@@ -50,6 +50,7 @@
 
 <script>
 import apiA from '~/service/api';
+import { mapState } from 'vuex';
 
 export default {
   components: {
@@ -63,9 +64,15 @@ export default {
       errored: false,
     }
   },
+  computed: {
+    ...mapState({
+      user: (state) => state.user,
+    })
+  },
   methods: {
     handleEdit(index, row) {
-      console.log(index, row);
+      console.log(index, row)
+      this.$router.push(`/catalog/book/${row._id}/update`)
     },
     handleDelete(_id) {
       console.log(_id);

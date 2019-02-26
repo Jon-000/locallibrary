@@ -78,7 +78,7 @@ export default {
     apiA
       .get(`/api/book/${this.$route.params.id}`)
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         this.book = res.data.results.book;
         this.bookinstance_list = res.data.results.book_instance_list;
       })

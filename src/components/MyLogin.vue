@@ -68,7 +68,7 @@ export default {
       let redirect_uri = process.env.VUE_APP_GITHUB_OAUTH_REDIRECT_URI
       let scope = 'read:user'
       let u = `https://github.com/login/oauth/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&scope=${scope}`
-      console.log(u)
+      // console.log(u)
       localStorage.urlBeforeAuth = this.$route.path
       // Cookie.remove('jwt_token')
       // Cookie.remove('url_before_auth')

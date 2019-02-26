@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="book" v-loading="!book">
     <!-- <div>
       <h3>bookupdate component</h3>
       <div>update book: {{book._id}}</div>
@@ -19,6 +19,7 @@
 
 <script>
 import BookForm from './bookform'
+import apiA from '~/service/api'
 export default {
   components: {
     BookForm
