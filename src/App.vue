@@ -29,7 +29,7 @@
               <el-menu-item index="/catalog/genre">所有类型</el-menu-item>
               <el-menu-item index="/catalog/bookinstance">所有拷贝</el-menu-item>
             </el-submenu>
-            <el-submenu index="">
+            <el-submenu index="" v-if="user">
               <template slot="title">
                 <span>管理</span>
               </template>
@@ -69,6 +69,12 @@ export default {
     return {
     }
   },
+  computed: {
+    ...mapState({
+      user: state => state.user,
+      isLoggedIn: state => state.isLoggedIn
+    })
+  },
   created: function () {
     // 当app创建时,即本应用任意子路由下加载时,都会创建vue app,此时检查登录状态
     // 查看cookie中是否有jwt token
@@ -105,13 +111,7 @@ export default {
         console.log(from)
       }
     },
-    computed: {
-      ...mapState({
-        count: state => state.count,
-        isLoggedIn: state => state.isLoggedIn
-      })
 
-    }
 
 }
 </script>
